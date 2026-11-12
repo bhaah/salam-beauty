@@ -10,7 +10,6 @@
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const EASE = 'cubic-bezier(.2,.8,.2,1)';
-  const fmt = n => '₪' + Number(n).toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const store = {
     get(k, d) { try { const v = localStorage.getItem('salam.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
@@ -39,12 +38,10 @@
 
   const ICON = {
     heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>',
-    bag: '<svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
     arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
-    truck: '<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',
     leaf: '<svg viewBox="0 0 24 24"><path d="M5 19c0-8 6-13 14-14-1 8-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>',
-    return: '<svg viewBox="0 0 24 24"><path d="M4 9h11a5 5 0 0 1 0 10H8"/><path d="m8 5-4 4 4 4"/></svg>',
     star: '<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>',
+    cal: '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
     move: '<svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M8 9l-3 3 3 3M16 9l3 3-3 3"/></svg>'
   };
 
@@ -166,54 +163,54 @@
   const CAT_LABEL = Object.fromEntries(CATS);
 
   const PRODUCTS = [
-    { id: 'rose-serum', name: 'Rose Glow Serum', short: 'Rose Glow', cat: 'skincare', type: 'serum', price: 149, rating: 4.9, reviews: 412, badge: 'Bestseller', color: '#E7A3A9', tint: '#F6E1DF',
+    { id: 'rose-serum', name: 'Rose Glow Serum', short: 'Rose Glow', cat: 'skincare', type: 'serum', rating: 4.9, reviews: 412, badge: 'Bestseller', color: '#E7A3A9', tint: '#F6E1DF',
       desc: 'A weightless daily serum with cold-pressed damask rose and three weights of hyaluronic acid. Skin looks plumper, brighter and more even from the first week.',
       ingredients: 'Damask Rose Water, Sodium Hyaluronate, Niacinamide (4%), Glycerin, Panthenol, Rosa Damascena Flower Oil.',
       how: 'Press 3–4 drops into clean skin morning and night, before moisturiser.' },
-    { id: 'velvet-lip', name: 'Velvet Matte Lipstick', cat: 'makeup', type: 'lipstick', price: 89, rating: 4.8, reviews: 986, badge: 'New shades', tint: '#F3E2DC',
+    { id: 'velvet-lip', name: 'Velvet Matte Lipstick', cat: 'makeup', type: 'lipstick', rating: 4.8, reviews: 986, badge: 'New shades', tint: '#F3E2DC',
       shades: [{ n: 'Desert Rose', c: '#C46F75' }, { n: 'Rosewood', c: '#9A4A55' }, { n: 'Crimson Silk', c: '#A3192F' }, { n: 'Nude Sand', c: '#C08B76' }, { n: 'Midnight Plum', c: '#5E2340' }],
       desc: 'Creamy-matte colour that glides on in one swipe and stays comfortable for eight hours. Enriched with argan oil and shea so lips never feel dry.',
       ingredients: 'Argania Spinosa Kernel Oil, Butyrospermum Parkii (Shea) Butter, Tocopherol, Candelilla Wax, Mica.',
       how: 'Apply from the centre of the lips outward. Blot and reapply for deeper intensity.' },
-    { id: 'hydra-cream', name: 'Hydra Cloud Cream', short: 'Hydra Cloud', cat: 'skincare', type: 'jar', price: 127, oldPrice: 159, rating: 4.7, reviews: 538, badge: '−20%', color: '#F3ECE6', tint: '#E6EEEC',
+    { id: 'hydra-cream', name: 'Hydra Cloud Cream', short: 'Hydra Cloud', cat: 'skincare', type: 'jar', rating: 4.7, reviews: 538, badge: 'Fan favourite', color: '#F3ECE6', tint: '#E6EEEC',
       desc: 'A whipped gel-cream that melts into skin and locks in moisture for 72 hours. Dead Sea minerals help strengthen the barrier without a heavy feel.',
       ingredients: 'Aqua, Squalane, Dead Sea Salt, Sodium Hyaluronate, Ceramide NP, Aloe Barbadensis Leaf Juice.',
       how: 'Smooth a pearl-sized amount over face and neck as the last step of your routine.' },
-    { id: 'golden-palette', name: 'Golden Hour Palette', cat: 'makeup', type: 'palette', price: 179, rating: 4.9, reviews: 267, badge: 'Limited', color: '#C98E6B', tint: '#F5E8DA',
+    { id: 'golden-palette', name: 'Golden Hour Palette', cat: 'makeup', type: 'palette', rating: 4.9, reviews: 267, badge: 'Limited', color: '#C98E6B', tint: '#F5E8DA',
       pans: ['#E9C9B8', '#D6A07E', '#B86F55', '#C9A46A', '#8E5A4E', '#5A3647'],
       desc: 'Six buttery shades — from champagne shimmer to deep plum matte — inspired by desert light at dusk. Highly pigmented, easy to blend.',
       ingredients: 'Mica, Talc-free base, Jojoba Esters, Tocopherol, Iron Oxides.',
       how: 'Sweep the lightest shade across the lid, deepen the crease, and press shimmer onto the centre with a fingertip.' },
-    { id: 'oud-mist', name: 'Oud & Amber Mist', short: 'Oud Amber', cat: 'fragrance', type: 'mist', price: 119, rating: 4.8, reviews: 301, color: '#D9B48A', tint: '#F2E6D6',
+    { id: 'oud-mist', name: 'Oud & Amber Mist', short: 'Oud Amber', cat: 'fragrance', type: 'mist', rating: 4.8, reviews: 301, color: '#D9B48A', tint: '#F2E6D6',
       desc: 'A warm, softly smoky hair and body mist. Agarwood and amber, brightened with a little bergamot.',
       ingredients: 'Alcohol Denat., Aqua, Parfum (Oud Accord, Amber, Bergamot), Glycerin.',
       how: 'Mist over hair and body from 20 cm away. Layer with Jasmine Night for evenings.' },
-    { id: 'argan-elixir', name: 'Argan Hair Elixir', short: 'Argan', cat: 'hair', type: 'oil', price: 109, rating: 4.8, reviews: 644, badge: 'Bestseller', color: '#D99A3E', tint: '#F5EAD8',
+    { id: 'argan-elixir', name: 'Argan Hair Elixir', short: 'Argan', cat: 'hair', type: 'oil', rating: 4.8, reviews: 644, badge: 'Bestseller', color: '#D99A3E', tint: '#F5EAD8',
       desc: 'Pure cold-pressed argan oil with camellia for frizz-free, glossy lengths. Two drops is all it takes.',
       ingredients: 'Argania Spinosa Kernel Oil, Camellia Japonica Seed Oil, Tocopherol.',
       how: 'Warm 2–3 drops between palms and smooth over mid-lengths and ends, damp or dry.' },
-    { id: 'lash-mascara', name: 'Lash Lift Mascara', cat: 'makeup', type: 'mascara', price: 79, rating: 4.6, reviews: 455, color: '#3B2230', tint: '#ECE3E7',
+    { id: 'lash-mascara', name: 'Lash Lift Mascara', cat: 'makeup', type: 'mascara', rating: 4.6, reviews: 455, color: '#3B2230', tint: '#ECE3E7',
       desc: 'A curling, lengthening formula with a tapered brush that reaches every lash. Smudge-proof, flake-free, removes with warm water.',
       ingredients: 'Aqua, Beeswax-free polymer blend, Castor Seed Oil, Panthenol, Black Iron Oxide.',
       how: 'Wiggle the brush at the root and sweep upward. Add a second coat while still wet.' },
-    { id: 'deadsea-butter', name: 'Dead Sea Body Butter', short: 'Dead Sea', cat: 'body', type: 'jar', price: 99, rating: 4.7, reviews: 356, color: '#E3D9CC', tint: '#E3ECEF',
+    { id: 'deadsea-butter', name: 'Dead Sea Body Butter', short: 'Dead Sea', cat: 'body', type: 'jar', rating: 4.7, reviews: 356, color: '#E3D9CC', tint: '#E3ECEF',
       desc: 'A rich, slow-melting butter for dry skin, with shea, cocoa and mineral-rich Dead Sea salt. Absorbs without a greasy finish.',
       ingredients: 'Butyrospermum Parkii Butter, Theobroma Cacao Seed Butter, Maris Sal, Sweet Almond Oil.',
       how: 'Massage into slightly damp skin after showering, focusing on elbows, knees and heels.' },
-    { id: 'silk-foundation', name: 'Silk Skin Foundation', short: 'Silk Skin', cat: 'makeup', type: 'pump', price: 159, rating: 4.6, reviews: 721, tint: '#F3E7DD',
+    { id: 'silk-foundation', name: 'Silk Skin Foundation', short: 'Silk Skin', cat: 'makeup', type: 'pump', rating: 4.6, reviews: 721, tint: '#F3E7DD',
       shades: [{ n: 'Porcelain', c: '#F1D3BE' }, { n: 'Sand', c: '#E0B594' }, { n: 'Honey', c: '#C99168' }, { n: 'Caramel', c: '#A86F48' }, { n: 'Mocha', c: '#7A4B2E' }],
       desc: 'A medium-coverage, serum-light foundation with a soft-focus satin finish. Breathable, buildable and true to tone all day.',
       ingredients: 'Aqua, Squalane, Niacinamide, Sodium Hyaluronate, Iron Oxides. SPF 15.',
       how: 'Shake well. Apply one pump with fingertips or a damp sponge, working from the centre of the face outward.' },
-    { id: 'jasmine-perfume', name: 'Jasmine Night Eau de Parfum', short: 'Jasmine', cat: 'fragrance', type: 'perfume', price: 289, rating: 4.9, reviews: 189, badge: 'New', color: '#E9C7CF', tint: '#F1E4EA',
+    { id: 'jasmine-perfume', name: 'Jasmine Night Eau de Parfum', short: 'Jasmine', cat: 'fragrance', type: 'perfume', rating: 4.9, reviews: 189, badge: 'New', color: '#E9C7CF', tint: '#F1E4EA',
       desc: 'Night-blooming jasmine, Taif rose and a trail of white musk. Intimate, luminous and long-lasting.',
       ingredients: 'Alcohol Denat., Parfum (Jasmine Sambac, Rose, White Musk, Sandalwood), Aqua.',
       how: 'Apply to pulse points — wrists, neck and behind the ears. Don\'t rub.' },
-    { id: 'vitc-toner', name: 'Vitamin C Glow Toner', short: 'Vitamin C', cat: 'skincare', type: 'bottle', price: 87, oldPrice: 109, rating: 4.7, reviews: 498, badge: '−20%', color: '#F2B66B', tint: '#FBEBD6',
+    { id: 'vitc-toner', name: 'Vitamin C Glow Toner', short: 'Vitamin C', cat: 'skincare', type: 'bottle', rating: 4.7, reviews: 498, badge: 'New', color: '#F2B66B', tint: '#FBEBD6',
       desc: 'A gentle brightening toner with stabilised vitamin C and lactic acid that smooths texture and fades dullness over time.',
       ingredients: 'Aqua, Ascorbyl Glucoside, Lactic Acid, Kakadu Plum Extract, Glycerin.',
       how: 'Sweep over clean skin with a cotton pad or pat in with palms, morning and evening.' },
-    { id: 'lip-oil', name: 'Rose Lip Oil Tint', cat: 'makeup', type: 'gloss', price: 69, rating: 4.8, reviews: 612, tint: '#F7E2E2',
+    { id: 'lip-oil', name: 'Rose Lip Oil Tint', cat: 'makeup', type: 'gloss', rating: 4.8, reviews: 612, tint: '#F7E2E2',
       shades: [{ n: 'Petal', c: '#E58C98' }, { n: 'Berry', c: '#B0405F' }, { n: 'Coral', c: '#E6765E' }, { n: 'Clear Glow', c: '#EBBDB5' }],
       desc: 'A non-sticky lip oil with a sheer wash of colour and a glassy shine. Rosehip and jojoba keep lips soft for hours.',
       ingredients: 'Simmondsia Chinensis Seed Oil, Rosa Canina Fruit Oil, Tocopherol, Mica.',
@@ -533,46 +530,23 @@
     }
   }
 
-  /* ---------- Cart & wishlist state ---------- */
-  let cart = store.get('cart', []).filter(l => byId[l.id]);
+  /* ---------- Wishlist state ---------- */
   let wish = new Set(store.get('wish', []).filter(id => byId[id]));
-  let promo = null;
-  const PROMOS = { SALAM10: { pct: 10, label: 'Welcome 10%' }, GLOW20: { pct: 20, label: 'Winter Glow 20%' } };
-  const FREE_SHIP = 250, SHIP = 25;
-  const saveCart = () => store.set('cart', cart);
   const saveWish = () => store.set('wish', [...wish]);
-  const cartQty = () => cart.reduce((s, l) => s + l.qty, 0);
 
   function updateBadges(bump) {
-    const cc = $('#cartCount'), wc = $('#wishCount');
-    const q = cartQty();
-    cc.textContent = q; cc.classList.toggle('has', q > 0);
-    wc.textContent = wish.size; wc.classList.toggle('has', wish.size > 0);
-    $('#tabBagCount').textContent = q || '';
-    $('#tabWishCount').textContent = wish.size || '';
-    if (bump === 'cart') { restartAnim(cc, 'bump'); restartAnim($('#cartBtn'), 'shake'); }
-    if (bump === 'wish') restartAnim(wc, 'bump');
+    const wc = $('#wishCount');
+    wc.textContent = wish.size;
+    wc.classList.toggle('has', wish.size > 0);
+    if (bump) { restartAnim(wc, 'bump'); restartAnim($('#wishBtn'), 'shake'); }
   }
 
-  function addToCart(id, shadeIdx = null, qty = 1, fromEl = null, opts = {}) {
-    const p = byId[id];
-    const s = p.shades ? (shadeIdx ?? 0) : null;
-    const key = id + ':' + s;
-    const line = cart.find(l => l.key === key);
-    if (line) line.qty = Math.min(10, line.qty + qty);
-    else cart.push({ key, id, shade: s, qty });
-    saveCart();
-    const after = () => { updateBadges('cart'); if (drawer.classList.contains('is-open')) renderDrawer(); };
-    if (fromEl) flyToCart(fromEl, artOf(p, s), after); else after();
-    if (!opts.silent) toast(`<b>${p.name}</b>${s !== null ? ' · ' + p.shades[s].n : ''} added to your bag`, { label: 'View bag', fn: () => openDrawer('bag') });
-  }
-
-  function flyToCart(fromEl, html, done) {
+  function flyToWish(fromEl, html, done) {
     if (RM) { done(); return; }
     const wasHidden = header.classList.contains('is-hidden');
     pinHeader();
     const r = fromEl.getBoundingClientRect();
-    const t = $('#cartBtn').getBoundingClientRect();
+    const t = $('#wishBtn').getBoundingClientRect();
     const tTop = t.top + (wasHidden ? header.offsetHeight : 0);
     const size = clamp(Math.min(r.width, r.height) * .8, 60, 150);
     const f = document.createElement('div');
@@ -607,17 +581,23 @@
     }
   }
 
-  function toggleWish(id, btn) {
+  // Add or remove a product from the wishlist. opts: { btn, from, shade, silent }
+  function setWish(id, on, opts = {}) {
     const p = byId[id];
-    const on = !wish.has(id);
+    if (wish.has(id) === on) return false;
     if (on) wish.add(id); else wish.delete(id);
     saveWish();
     $$(`[data-wish="${id}"]`).forEach(b => { b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
-    if (on && btn) burst(btn);
-    updateBadges('wish');
-    toast(on ? `Saved <b>${p.name}</b> to your wishlist` : `Removed <b>${p.name}</b> from your wishlist`, on ? { label: 'View', fn: () => openDrawer('wish') } : null);
-    if (drawer.classList.contains('is-open')) renderDrawer();
+    const after = () => { updateBadges(on); if (drawer.classList.contains('is-open')) renderDrawer(); };
+    if (on && opts.from) flyToWish(opts.from, artOf(p, opts.shade), after); else after();
+    if (on && opts.btn) burst(opts.btn);
+    if (!opts.silent) {
+      toast(on ? `Saved <b>${p.name}</b> to your wishlist` : `Removed <b>${p.name}</b> from your wishlist`,
+        on ? { label: 'View', fn: () => openDrawer() } : { label: 'Undo', fn: () => setWish(id, true, { silent: true }) });
+    }
+    return true;
   }
+  const toggleWish = (id, btn, from) => setWish(id, !wish.has(id), { btn, from });
 
   /* ---------- Shared product helpers ---------- */
   const cardShade = {};
@@ -650,8 +630,7 @@
   function openQV(id) {
     const p = byId[id];
     let s = p.shades ? (cardShade[id] ?? 0) : null;
-    let qty = 1;
-    const save = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+    const saveLabel = () => wish.has(id) ? `${ICON.heart} Saved to wishlist` : `${ICON.heart} Save to wishlist`;
     openModal(`<div class="qv">
       <div class="qv-media" style="--tint:${p.tint}">
         <div class="qv-art" id="qvArt">${artOf(p, s)}</div>
@@ -661,19 +640,17 @@
         <p class="eyebrow">${CAT_LABEL[p.cat]}${p.badge ? ' · ' + p.badge : ''}</p>
         <h2>${p.name}</h2>
         <div class="qv-rating">${stars(p.rating)} <span>${p.rating} · ${p.reviews} reviews</span></div>
-        <div class="qv-price">${fmt(p.price)}${p.oldPrice ? `<s>${fmt(p.oldPrice)}</s><span class="save">SAVE ${save}%</span>` : ''}</div>
         <p class="qv-desc">${p.desc}</p>
         ${p.shades ? `<div class="qv-shades"><div class="label">Shade: <b id="qvShadeName">${p.shades[s].n}</b></div>
           <div class="swatches">${p.shades.map((sh, i) => `<button class="swatch ${i === s ? 'is-active' : ''}" style="--c:${sh.c}" data-shade="${i}" aria-label="${sh.n}" title="${sh.n}"></button>`).join('')}</div></div>` : ''}
         <div class="qv-buy">
-          <div class="qty qty-lg"><button data-q="-1" aria-label="Decrease quantity">−</button><span id="qvQty">1</span><button data-q="1" aria-label="Increase quantity">+</button></div>
-          <button class="btn btn-primary" id="qvAdd">Add to bag · <span id="qvTotal">${fmt(p.price)}</span></button>
-          <button class="wish ${wish.has(id) ? 'is-on' : ''}" data-wish="${id}" aria-pressed="${wish.has(id)}" aria-label="Save to wishlist">${ICON.heart}</button>
+          <button class="btn btn-primary qv-save ${wish.has(id) ? 'is-saved' : ''}" id="qvSave" data-wish="${id}" aria-pressed="${wish.has(id)}">${saveLabel()}</button>
+          <a class="btn btn-ghost" href="#treatments" id="qvBook">Book a consultation</a>
         </div>
         <ul class="qv-perks">
-          <li>${ICON.truck} Free delivery over ₪250 · ships today if ordered before 14:00</li>
-          <li>${ICON.return} 30-day happy-skin returns, even if opened</li>
-          <li>${ICON.star} Earn ${Math.round(p.price / 10)} Salam points with this order</li>
+          <li>${ICON.leaf} Vegan, cruelty-free &amp; dermatologist tested</li>
+          <li>${ICON.star} Rated ${p.rating} by ${p.reviews} clients</li>
+          <li>${ICON.cal} Ask to try it during any studio treatment</li>
         </ul>
         <div class="tabs">
           <div class="tabs-head" role="tablist"><span class="tab-ind"></span>
@@ -688,18 +665,21 @@
 
     const root = modalBody;
     const qvArt = $('#qvArt', root);
-    const qtyEl = $('#qvQty', root), total = $('#qvTotal', root);
-    const syncTotal = () => { qtyEl.textContent = qty; restartAnim(qtyEl, 'tick'); total.textContent = fmt(p.price * qty); };
-    $$('[data-q]', root).forEach(b => b.addEventListener('click', () => { qty = clamp(qty + +b.dataset.q, 1, 10); syncTotal(); }));
     $$('.qv-shades .swatch', root).forEach(b => b.addEventListener('click', () => {
       s = +b.dataset.shade;
+      cardShade[id] = s;
       $$('.qv-shades .swatch', root).forEach(x => x.classList.toggle('is-active', x === b));
       $('#qvShadeName', root).textContent = p.shades[s].n;
       qvArt.innerHTML = artOf(p, s);
       restartAnim(qvArt, 'swap');
     }));
-    $('#qvAdd', root).addEventListener('click', () => { addToCart(id, s, qty, qvArt); setTimeout(closeModal, 250); });
-    $('.wish', root).addEventListener('click', e => toggleWish(id, e.currentTarget));
+    const save = $('#qvSave', root);
+    save.addEventListener('click', () => {
+      setWish(id, !wish.has(id), { btn: save, from: qvArt, shade: s });
+      save.innerHTML = saveLabel();
+      save.classList.toggle('is-saved', wish.has(id));
+    });
+    $('#qvBook', root).addEventListener('click', closeModal);
     // tabs
     const tabInd = $('.tab-ind', root), panel = $('#qvPanel', root);
     const texts = { desc: p.desc, ing: p.ingredients, how: p.how };
@@ -725,90 +705,23 @@
     if (q) { e.preventDefault(); closeSearch(); openQV(q.dataset.qv); }
   });
 
-  /* ---------- Drawer (bag + wishlist) ---------- */
-  const drawer = $('#drawer'), dBody = $('#drawerBody'), dFoot = $('#drawerFoot');
-  let drawerTab = 'bag', lastShip = 0;
-
-  function totals() {
-    const sub = cart.reduce((s, l) => s + byId[l.id].price * l.qty, 0);
-    const disc = promo ? Math.round(sub * promo.pct) / 100 : 0;
-    const ship = sub === 0 ? 0 : (sub - disc >= FREE_SHIP ? 0 : SHIP);
-    return { sub, disc, ship, total: sub - disc + ship };
-  }
+  /* ---------- Wishlist drawer ---------- */
+  const drawer = $('#drawer'), dBody = $('#drawerBody');
 
   function renderDrawer() {
-    $$('#drawerTabs button').forEach(b => b.classList.toggle('is-active', b.dataset.tab === drawerTab));
-    moveIndicator($('#drawerTabs .seg-indicator'), $('#drawerTabs .is-active'));
-    if (drawerTab === 'bag') renderBag(); else renderWish();
-  }
-
-  function renderBag() {
-    if (!cart.length) {
-      dBody.innerHTML = `<div class="drawer-empty"><div class="ico">${ICON.bag}</div><h4>Your bag is empty</h4><p>Your next ritual is waiting — start with a bestseller.</p>
-        <button class="btn btn-primary" data-close-go="#try-on">Find your shade</button></div>`;
-      dFoot.hidden = true;
-      lastShip = 0;
-      return;
-    }
-    const t = totals();
-    const net = t.sub - t.disc;
-    const left = Math.max(0, FREE_SHIP - net);
-    const pct = Math.min(100, net / FREE_SHIP * 100);
-    const suggestion = PRODUCTS.find(p => !cart.some(l => l.id === p.id) && ['rose-serum', 'lip-oil', 'argan-elixir', 'vitc-toner', 'hydra-cream'].includes(p.id));
-    dBody.innerHTML = `
-      <div class="ship-progress">${left > 0 ? `You're <b>${fmt(left)}</b> away from free delivery` : `<b>You've unlocked free delivery ✓</b>`}
-        <div class="ship-bar"><i style="width:${lastShip}%"></i></div></div>
-      ${cart.map(l => {
-        const p = byId[l.id];
-        return `<div class="line" data-key="${l.key}">
-          <div class="line-thumb" style="--tint:${p.tint}" data-qv="${p.id}">${artOf(p, l.shade)}</div>
-          <div><h4>${p.name}</h4>
-            <small>${l.shade !== null ? `<i style="--c:${p.shades[l.shade].c}"></i>${p.shades[l.shade].n}` : CAT_LABEL[p.cat]}</small>
-            <div class="qty"><button data-dq="-1" aria-label="Decrease">−</button><span>${l.qty}</span><button data-dq="1" aria-label="Increase">+</button></div></div>
-          <div class="line-right"><span class="price">${fmt(p.price * l.qty)}</span><button class="remove" data-remove>Remove</button></div>
-        </div>`;
-      }).join('')}
-      ${suggestion ? `<p class="upsell-label">Complete your ritual</p>
-        <div class="upsell"><div class="line-thumb" style="--tint:${suggestion.tint}" data-qv="${suggestion.id}">${artOf(suggestion, 0)}</div>
-        <div><strong>${suggestion.name}</strong><small>${fmt(suggestion.price)}</small></div>
-        <button class="mini-add" data-upsell="${suggestion.id}" aria-label="Add ${suggestion.name}">+</button></div>` : ''}`;
-    requestAnimationFrame(() => requestAnimationFrame(() => { const bar = $('.ship-bar i', dBody); if (bar) bar.style.width = pct + '%'; }));
-    lastShip = pct;
-
-    dFoot.hidden = false;
-    dFoot.innerHTML = `
-      ${promo ? `<div class="promo-applied"><span>✓ ${promo.code} — ${promo.label}</span><button data-promo-remove>Remove</button></div>`
-        : `<form class="promo" id="promoForm"><input id="promoInput" placeholder="Promo code" aria-label="Promo code"><button class="btn btn-ghost btn-sm">Apply</button></form>`}
-      <div class="totals">
-        <div><span>Subtotal</span><span>${fmt(t.sub)}</span></div>
-        ${t.disc ? `<div class="disc"><span>Discount</span><span>−${fmt(t.disc)}</span></div>` : ''}
-        <div><span>Delivery</span><span>${t.ship ? fmt(t.ship) : 'Free'}</span></div>
-        <div class="grand"><span>Total</span><span>${fmt(t.total)}</span></div>
-      </div>
-      <button class="btn btn-primary btn-block" id="checkoutBtn">Checkout securely ${ICON.arrow}</button>`;
-    const form = $('#promoForm', dFoot);
-    if (form) form.addEventListener('submit', e => {
-      e.preventDefault();
-      const code = $('#promoInput', dFoot).value.trim().toUpperCase();
-      if (PROMOS[code]) { promo = { code, ...PROMOS[code] }; toast(`Code <b>${code}</b> applied — ${PROMOS[code].pct}% off`); renderBag(); }
-      else { restartAnim(form, 'is-invalid'); toast(code ? `Sorry, “${code.replace(/</g, '')}” isn't a valid code` : 'Enter a promo code first'); }
-    });
-  }
-
-  function renderWish() {
-    dFoot.hidden = true;
+    $('#drawerCount').textContent = wish.size || '';
     if (!wish.size) {
-      dBody.innerHTML = `<div class="drawer-empty"><div class="ico">${ICON.heart}</div><h4>No favourites yet</h4><p>Tap the heart on any product to save it for later.</p>
+      dBody.innerHTML = `<div class="drawer-empty"><div class="ico">${ICON.heart}</div><h4>No favourites yet</h4>
+        <p>Tap the heart on any product — or save a shade from the virtual try-on — to keep it here.</p>
         <button class="btn btn-primary" data-close-go="#quiz">Take the skin quiz</button></div>`;
       return;
     }
     dBody.innerHTML = [...wish].map(id => {
       const p = byId[id];
       return `<div class="line" data-wid="${id}">
-        <div class="line-thumb" style="--tint:${p.tint}" data-qv="${id}">${artOf(p, 0)}</div>
-        <div><h4>${p.name}</h4><small>${stars(p.rating)} ${p.reviews}</small>
-          <div class="wish-actions"><button class="btn btn-primary" data-wadd="${id}">Move to bag</button><button class="remove" data-wremove="${id}">Remove</button></div></div>
-        <div class="line-right"><span class="price">${fmt(p.price)}</span></div>
+        <div class="line-thumb" style="--tint:${p.tint}" data-qv="${id}">${artOf(p, cardShade[id] ?? 0)}</div>
+        <div><h4>${p.name}</h4><small>${stars(p.rating)} ${p.reviews} reviews</small>
+          <div class="wish-actions"><button class="btn btn-primary" data-qv="${id}">View details</button><button class="remove" data-wremove="${id}">Remove</button></div></div>
       </div>`;
     }).join('');
   }
@@ -816,56 +729,15 @@
   dBody.addEventListener('click', e => {
     const go = e.target.closest('[data-close-go]');
     if (go) { closeDrawer(); setTimeout(() => $(go.dataset.closeGo).scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }), 300); return; }
-    const line = e.target.closest('.line[data-key]');
-    const dq = e.target.closest('[data-dq]');
-    if (dq && line) {
-      const l = cart.find(x => x.key === line.dataset.key);
-      const nq = l.qty + +dq.dataset.dq;
-      if (nq < 1) { removeLine(line); return; }
-      l.qty = Math.min(10, nq); saveCart(); updateBadges(); renderBag();
-      const span = $(`.line[data-key="${l.key}"] .qty span`, dBody);
-      if (span) restartAnim(span, 'tick');
-      return;
-    }
-    if (e.target.closest('[data-remove]') && line) { removeLine(line); return; }
-    const up = e.target.closest('[data-upsell]');
-    if (up) { addToCart(up.dataset.upsell, 0, 1, null, { silent: true }); toast(`<b>${byId[up.dataset.upsell].name}</b> added`); return; }
-    const wa = e.target.closest('[data-wadd]');
-    if (wa) {
-      const id = wa.dataset.wadd;
-      addToCart(id, 0, 1, $(`.line[data-wid="${id}"] .line-thumb`, dBody), { silent: true });
-      wish.delete(id); saveWish();
-      $$(`[data-wish="${id}"]`).forEach(b => { b.classList.remove('is-on'); b.setAttribute('aria-pressed', false); });
-      updateBadges();
-      toast(`<b>${byId[id].name}</b> moved to your bag`);
-      const el = wa.closest('.line'); el.classList.add('is-removing'); setTimeout(renderWish, 380);
-      return;
-    }
     const wr = e.target.closest('[data-wremove]');
     if (wr) {
       const id = wr.dataset.wremove;
-      wish.delete(id); saveWish(); updateBadges();
-      $$(`[data-wish="${id}"]`).forEach(b => { b.classList.remove('is-on'); b.setAttribute('aria-pressed', false); });
-      const el = wr.closest('.line'); el.classList.add('is-removing'); setTimeout(renderWish, 380);
+      wr.closest('.line').classList.add('is-removing');
+      setTimeout(() => setWish(id, false), 360);
     }
   });
-  dFoot.addEventListener('click', e => {
-    if (e.target.closest('[data-promo-remove]')) { promo = null; renderBag(); }
-    if (e.target.closest('#checkoutBtn')) openCheckout();
-  });
 
-  function removeLine(el) {
-    const idx = cart.findIndex(x => x.key === el.dataset.key);
-    if (idx < 0) return;
-    const [removed] = cart.splice(idx, 1);
-    saveCart(); updateBadges();
-    el.classList.add('is-removing');
-    setTimeout(renderBag, 380);
-    toast(`Removed <b>${byId[removed.id].name}</b>`, { label: 'Undo', fn: () => { cart.splice(idx, 0, removed); saveCart(); updateBadges('cart'); renderDrawer(); } });
-  }
-
-  function openDrawer(tab = 'bag') {
-    drawerTab = tab;
+  function openDrawer() {
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
     lock('drawer', true);
@@ -878,103 +750,11 @@
     drawer.setAttribute('aria-hidden', 'true');
     lock('drawer', false);
   }
-  $('#cartBtn').addEventListener('click', () => openDrawer('bag'));
-  $('#wishBtn').addEventListener('click', () => openDrawer('wish'));
+  $('#wishBtn').addEventListener('click', openDrawer);
   $('#drawerClose').addEventListener('click', closeDrawer);
-  $('#drawerTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { drawerTab = b.dataset.tab; renderDrawer(); } });
   overlay.addEventListener('click', () => { closeDrawer(); closeSearch(); });
 
-  /* ---------- Checkout ---------- */
-  function openCheckout() {
-    closeDrawer();
-    let method = 'delivery', pay = 'card';
-    const render = () => {
-      const t = totals();
-      const ship = method === 'pickup' ? 0 : t.ship;
-      return { t, ship, total: t.sub - t.disc + ship };
-    };
-    const summaryHTML = () => {
-      const { t, ship, total } = render();
-      return `<div class="totals">
-        <div><span>Subtotal</span><span>${fmt(t.sub)}</span></div>
-        ${t.disc ? `<div class="disc"><span>Discount (${promo.code})</span><span>−${fmt(t.disc)}</span></div>` : ''}
-        <div><span>${method === 'pickup' ? 'Studio pickup' : 'Delivery'}</span><span>${ship ? fmt(ship) : 'Free'}</span></div>
-        <div class="grand"><span>Total</span><span>${fmt(total)}</span></div></div>`;
-    };
-    setTimeout(() => {
-      openModal(`<div class="checkout">
-      <div class="co-main">
-        <h2>Checkout</h2>
-        <p>Secure checkout · Takes less than a minute</p>
-        <div class="co-label">How would you like it?</div>
-        <div class="choice-row" data-group="method">
-          <button class="choice is-selected" data-v="delivery"><strong>Home delivery</strong><small>1–3 business days</small></button>
-          <button class="choice" data-v="pickup"><strong>Studio pickup</strong><small>Ready in 2 hours · free</small></button>
-        </div>
-        <div class="co-label">Your details</div>
-        <form id="coForm" novalidate>
-          <div class="form-grid">
-            <div class="field"><input id="coName" placeholder=" " autocomplete="name"><label for="coName">Full name</label><div class="err">Please enter your name.</div></div>
-            <div class="field"><input id="coPhone" type="tel" placeholder=" " autocomplete="tel"><label for="coPhone">Mobile number</label><div class="err">Please enter a valid phone number.</div></div>
-            <div class="field full" id="coAddrField"><input id="coAddr" placeholder=" " autocomplete="street-address"><label for="coAddr">Street address &amp; city</label><div class="err">We need an address to deliver to.</div></div>
-          </div>
-        </form>
-        <div class="co-label">Payment</div>
-        <div class="choice-row" data-group="pay">
-          <button class="choice is-selected" data-v="card"><strong>Card on delivery</strong><small>Pay when it arrives</small></button>
-          <button class="choice" data-v="bit"><strong>Bit / Apple Pay</strong><small>We'll send a payment link</small></button>
-        </div>
-      </div>
-      <div class="co-side">
-        <h4>Order summary</h4>
-        <div class="co-items">${cart.map(l => { const p = byId[l.id]; return `<div class="co-item"><div class="line-thumb" style="--tint:${p.tint}">${artOf(p, l.shade)}<b>${l.qty}</b></div><div>${p.name}${l.shade !== null ? `<br><small style="color:var(--muted)">${p.shades[l.shade].n}</small>` : ''}</div><span>${fmt(p.price * l.qty)}</span></div>`; }).join('')}</div>
-        <div id="coSummary">${summaryHTML()}</div>
-        <button class="btn btn-primary btn-block" id="placeOrder">Place order</button>
-        <p style="font-size:.76rem;color:var(--muted);text-align:center;margin:14px 0 0">By placing your order you agree to our Terms &amp; Privacy Policy.</p>
-      </div>
-    </div>`);
-      wire();
-    }, 200);
-
-    function wire() {
-      const root = modalBody;
-      $$('[data-group]', root).forEach(g => g.addEventListener('click', e => {
-        const c = e.target.closest('.choice'); if (!c) return;
-        $$('.choice', g).forEach(x => x.classList.toggle('is-selected', x === c));
-        if (g.dataset.group === 'method') {
-          method = c.dataset.v;
-          $('#coAddrField', root).hidden = method === 'pickup';
-          $('#coSummary', root).innerHTML = summaryHTML();
-        } else pay = c.dataset.v;
-      }));
-      $('#placeOrder', root).addEventListener('click', e => {
-        const ok = [
-          validate($('#coName', root), v => v.length > 1),
-          validate($('#coPhone', root), v => /^[0-9+\-\s()]{9,16}$/.test(v)),
-          method === 'pickup' || validate($('#coAddr', root), v => v.length > 5)
-        ].every(Boolean);
-        if (!ok) return;
-        const btn = e.currentTarget;
-        btn.classList.add('is-loading');
-        setTimeout(() => {
-          const { total } = render();
-          const order = 'SB-' + Math.floor(100000 + Math.random() * 900000);
-          const name = $('#coName', root).value.trim().split(' ')[0];
-          cart = []; promo = null; saveCart(); updateBadges();
-          openModal(`<div class="order-success">
-            <svg class="check-anim" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><path d="M30 52 l14 14 l26 -30"/></svg>
-            <h3>Thank you, ${name.replace(/</g, '')}!</h3>
-            <p>Order <b>${order}</b> is confirmed. ${pay === 'bit' ? 'A payment link is on its way to your phone.' : `You'll pay ${fmt(total)} on ${method === 'pickup' ? 'pickup' : 'delivery'}.`}</p>
-            <div class="timeline"><div class="on"><i>✓</i>Confirmed</div><div class="on"><i>2</i>Packing</div><div><i>3</i>${method === 'pickup' ? 'Ready' : 'On the way'}</div><div><i>4</i>${method === 'pickup' ? 'Collected' : 'Delivered'}</div></div>
-            <button class="btn btn-primary" id="successClose">Continue shopping</button>
-          </div>`, 'sm');
-          $('#successClose', modalBody).addEventListener('click', closeModal);
-          confetti();
-        }, 1300);
-      });
-    }
-  }
-
+  /* ---------- Form validation ---------- */
   function validate(input, test) {
     const field = input.closest('.field');
     const ok = test(input.value.trim());
@@ -1043,7 +823,7 @@
     $('#searchResults').innerHTML = res.length
       ? res.map((p, i) => `<button class="sr-item" data-qv="${p.id}" style="animation-delay:${i * 40}ms">
           <div class="line-thumb" style="--tint:${p.tint}">${artOf(p, 0)}</div>
-          <div><strong>${highlight(p.name, safe.trim())}</strong><small>${CAT_LABEL[p.cat]} · ${fmt(p.price)}</small></div></button>`).join('')
+          <div><strong>${highlight(p.name, safe.trim())}</strong><small>${CAT_LABEL[p.cat]} · ★ ${p.rating}</small></div></button>`).join('')
       : `<p class="sr-empty">No matches. Try “serum”, “rose” or a shade like “Berry”.</p>`;
   }
   $('#searchBtn').addEventListener('click', openSearch);
@@ -1054,28 +834,6 @@
     if (e.key === 'ArrowDown') { e.preventDefault(); const first = $('#searchResults .sr-item'); if (first) first.focus(); }
   });
   $$('.search-suggest button').forEach(b => b.addEventListener('click', () => { sInput.value = b.dataset.s; renderSearch(b.dataset.s); sInput.focus(); }));
-
-  /* ---------- Countdown ---------- */
-  function initCountdown() {
-    const now = new Date();
-    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + ((6 - now.getDay() + 7) % 7), 23, 59, 59);
-    if (end - now < 6 * 3600e3) end.setDate(end.getDate() + 7);
-    const nums = $$('#countdown .cd-num');
-    const prev = [];
-    const tick = () => {
-      const s = Math.max(0, Math.floor((end - Date.now()) / 1000));
-      [Math.floor(s / 86400), Math.floor(s % 86400 / 3600), Math.floor(s % 3600 / 60), s % 60]
-        .map(v => String(v).padStart(2, '0'))
-        .forEach((v, i) => { if (prev[i] !== v) { nums[i].innerHTML = `<span>${v}</span>`; prev[i] = v; } });
-    };
-    tick();
-    setInterval(tick, 1000);
-    const code = $('#copyCode');
-    code.addEventListener('click', () => {
-      const done = () => toast('Code <b>GLOW20</b> copied — paste it at checkout');
-      if (navigator.clipboard) navigator.clipboard.writeText('GLOW20').then(done, done); else done();
-    });
-  }
 
   /* ---------- Virtual try-on ---------- */
   function initTryOn() {
@@ -1111,7 +869,6 @@
       $('#tryTagColor').style.setProperty('--c', L.c);
       $('#tryTagName').textContent = L.n;
       $('#tryTagProduct').textContent = byId[L.pid].name;
-      $('#tryPrice').textContent = fmt(byId[L.pid].price);
       $('#intensityOut').textContent = st.int + '%';
       if (scan && !RM) restartAnim(stage, 'is-scanning');
     };
@@ -1150,7 +907,9 @@
 
     $('#tryAdd').addEventListener('click', () => {
       const L = LIPS[st.lip];
-      addToCart(L.pid, L.i, 1, $('.tryon-tag', stage));
+      cardShade[L.pid] = L.i;
+      if (!setWish(L.pid, true, { from: $('.tryon-tag', stage), shade: L.i, btn: $('#tryAdd'), silent: true })) { toast(`<b>${byId[L.pid].name}</b> is already in your wishlist`, { label: 'View', fn: openDrawer }); return; }
+      toast(`Saved <b>${L.n}</b> · ${byId[L.pid].name} to your wishlist`, { label: 'View', fn: openDrawer });
     });
 
     // subtle head follow
@@ -1219,9 +978,10 @@
       if (e.target.closest('[data-retake]')) { Object.keys(answers).forEach(k => delete answers[k]); step = 0; render(-1); }
       if (e.target.closest('[data-addall]')) {
         const ids = JSON.parse(e.target.closest('[data-addall]').dataset.addall);
-        ids.forEach(id => addToCart(id, 0, 1, null, { silent: true }));
-        toast(`Your ritual (${ids.length} products) was added to your bag`, { label: 'View bag', fn: () => openDrawer('bag') });
-        openDrawer('bag');
+        ids.forEach(id => setWish(id, true, { silent: true }));
+        updateBadges(true);
+        toast(`Your ritual (${ids.length} products) is saved to your wishlist`);
+        openDrawer();
       }
     });
 
@@ -1255,7 +1015,6 @@
       body.innerHTML = `<div class="quiz-step quiz-loading"><div class="spinner"></div><p>Building your ritual…</p></div>`;
       setTimeout(() => {
         const ids = recommend(answers);
-        const sum = ids.reduce((s, id) => s + byId[id].price, 0);
         const match = 92 + (ids.length % 3) * 2 + (answers.skin === 'combination' ? 1 : 0);
         label.textContent = 'Your result';
         body.innerHTML = `<div class="quiz-step">
@@ -1267,12 +1026,12 @@
           <div class="ritual-list">${ids.map((id, i) => {
             const p = byId[id];
             return `<div class="ritual-item" style="animation-delay:${.15 + i * .12}s"><div class="ritual-thumb" style="--tint:${p.tint}">${artOf(p, 0)}</div>
-              <div><strong>${p.name}</strong><small>${WHY[id]}</small></div><button class="btn btn-ghost btn-sm" data-qv="${id}">${fmt(p.price)}</button></div>`;
+              <div><strong>${p.name}</strong><small>${WHY[id]}</small></div><button class="btn btn-ghost btn-sm" data-qv="${id}">View</button></div>`;
           }).join('')}</div>
           <div class="ritual-foot">
-            <div class="sum">Ritual total <b>${fmt(sum)}</b></div>
+            <div class="sum">Save it and bring it to your next studio visit</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" data-retake>Retake quiz</button>
-            <button class="btn btn-primary" data-addall='${JSON.stringify(ids)}'>Add ritual to bag ${ICON.arrow}</button></div>
+            <button class="btn btn-primary" data-addall='${JSON.stringify(ids)}'>Save my ritual ${ICON.heart}</button></div>
           </div>
         </div>`;
         requestAnimationFrame(() => requestAnimationFrame(() => { $('.match-ring .fg', body).style.strokeDashoffset = 302 * (1 - match / 100); }));
@@ -1333,12 +1092,12 @@
   /* ---------- Booking ---------- */
   function initBooking() {
     const SERVICES = [
-      { id: 'rose-facial', n: 'Signature Rose Facial', d: 60, p: 280, desc: 'Double cleanse, enzyme peel, rose-quartz massage and mask.' },
-      { id: 'hydra-facial', n: 'Hydra Glow Facial', d: 75, p: 340, desc: 'Deep hydration infusion with hyaluronic acid and Dead Sea minerals.' },
-      { id: 'lash-lift', n: 'Lash Lift & Tint', d: 45, p: 190, desc: 'A natural, wide-awake curl that lasts up to eight weeks.' },
-      { id: 'brow', n: 'Brow Sculpt', d: 30, p: 120, desc: 'Shaping, tint and lamination for fuller-looking brows.' },
-      { id: 'makeup', n: 'Event Makeup', d: 60, p: 320, desc: 'Full glam or a soft glow for your special occasion.' },
-      { id: 'stone', n: 'Hot Stone Ritual', d: 90, p: 360, desc: 'Warm basalt stones, argan oil and a scalp massage.' }
+      { id: 'rose-facial', n: 'Signature Rose Facial', d: 60, desc: 'Double cleanse, enzyme peel, rose-quartz massage and mask.' },
+      { id: 'hydra-facial', n: 'Hydra Glow Facial', d: 75, desc: 'Deep hydration infusion with hyaluronic acid and Dead Sea minerals.' },
+      { id: 'lash-lift', n: 'Lash Lift & Tint', d: 45, desc: 'A natural, wide-awake curl that lasts up to eight weeks.' },
+      { id: 'brow', n: 'Brow Sculpt', d: 30, desc: 'Shaping, tint and lamination for fuller-looking brows.' },
+      { id: 'makeup', n: 'Event Makeup', d: 60, desc: 'Full glam or a soft glow for your special occasion.' },
+      { id: 'stone', n: 'Hot Stone Ritual', d: 90, desc: 'Warm basalt stones, argan oil and a scalp massage.' }
     ];
     const THER = [
       { id: 'any', n: 'First available', r: 'Fastest booking', i: '✦', c: '#C6A266' },
@@ -1358,7 +1117,7 @@
     const longDate = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 
     $('#services').innerHTML = SERVICES.map(s => `<button class="service" data-id="${s.id}" role="radio" aria-checked="false">
-      <span class="radio"></span><h4>${s.n}</h4><p>${s.desc}</p><div class="meta"><span>${s.d} min</span><span>${fmt(s.p)}</span></div></button>`).join('');
+      <span class="radio"></span><h4>${s.n}</h4><p>${s.desc}</p><div class="meta"><span>${s.d} min</span></div></button>`).join('');
     $('#therapists').innerHTML = THER.map(t => `<button class="therapist ${t.id === 'any' ? 'any' : ''}" data-id="${t.id}" role="radio" aria-checked="false">
       <span class="av" style="--c:${t.c}">${t.i}</span><strong>${t.n}</strong><small>${t.r}</small>${t.rt ? stars(t.rt) : ''}</button>`).join('');
 
@@ -1402,8 +1161,7 @@
       const s = SERVICES.find(x => x.id === bk.svc), t = THER.find(x => x.id === bk.th);
       const row = (k, v) => `<div><dt>${k}</dt><dd class="${v ? '' : 'empty'}">${v || '—'}</dd></div>`;
       $('#bkSummary').innerHTML = row('Treatment', s && s.n) + row('Specialist', t && t.n) + row('Date', bk.date && longDate(bk.date))
-        + row('Time', bk.time && `${bk.time}${s ? ` · ${s.d} min` : ''}`)
-        + `<div class="bk-total"><dt>Total</dt><dd>${s ? fmt(s.p) : '—'}</dd></div>`;
+        + row('Time', bk.time && `${bk.time}${s ? ` · ${s.d} min` : ''}`);
     }
     const valid = () => [!!bk.svc, !!bk.th, !!(bk.date && bk.time), true][bk.step];
     function go(n, dir = 1) {
@@ -1507,7 +1265,7 @@
       { n: 'Lana A.', c: '#C47A82', t: 'The Rose Glow Serum is the first thing that actually made my skin look awake. People keep asking what I\'m using.', p: 'Rose Glow Serum', d: '2 weeks ago' },
       { n: 'Maryam K.', c: '#C6A266', t: 'Booked the Signature Rose Facial for my birthday. The most relaxing hour of my year — and my skin glowed for days.', p: 'Signature Rose Facial', d: '1 month ago' },
       { n: 'Rana H.', c: '#5A3647', t: 'Finally a matte lipstick that doesn\'t dry my lips out. Desert Rose is my everyday shade now.', p: 'Velvet Matte Lipstick', d: '3 weeks ago' },
-      { n: 'Dana S.', c: '#A3785A', t: 'Used the virtual try-on to pick a shade and it was spot on. Delivery was next day, beautifully wrapped.', p: 'Rose Lip Oil Tint', d: '5 days ago' },
+      { n: 'Dana S.', c: '#A3785A', t: 'Used the virtual try-on to pick a shade and it was spot on. I wear it almost every day now.', p: 'Rose Lip Oil Tint', d: '5 days ago' },
       { n: 'Yasmin T.', c: '#B0405F', t: 'Two drops of the argan elixir and my hair has never been so soft. One bottle has lasted me three months.', p: 'Argan Hair Elixir', d: '2 months ago' },
       { n: 'Noa B.', c: '#7A4B2E', t: 'Maya did my lash lift and it looks so natural. The studio is calm, spotless and smells incredible.', p: 'Lash Lift & Tint', d: '1 week ago' }
     ];
@@ -1516,7 +1274,7 @@
       <div class="review-top">${stars(5)}<small>${r.d}</small></div>
       <blockquote>“${r.t}”</blockquote>
       <div class="review-author"><span class="av" style="--c:${r.c}">${r.n.split(' ').map(x => x[0]).join('')}</span>
-        <div><strong>${r.n}</strong><span class="verified">✓ Verified ${/Facial|Lash/.test(r.p) ? 'client' : 'buyer'}</span></div>
+        <div><strong>${r.n}</strong><span class="verified">✓ Verified client</span></div>
         <span class="review-product">${r.p}</span></div>
     </article>`).join('');
     let idx = 0, timer = null;
@@ -1606,11 +1364,7 @@
       msg.textContent = '';
       btn.classList.add('is-loading');
       setTimeout(() => {
-        form.innerHTML = `<div class="nl-success"><span style="font-size:1.6rem">✿</span><div><strong>Welcome to the ritual!</strong><br><small>Here's 10% off your first order.</small></div><span class="code" id="nlCode" title="Click to copy">SALAM10</span></div>`;
-        $('#nlCode').addEventListener('click', () => {
-          const done = () => toast('Code <b>SALAM10</b> copied');
-          if (navigator.clipboard) navigator.clipboard.writeText('SALAM10').then(done, done); else done();
-        });
+        form.innerHTML = `<div class="nl-success"><span style="font-size:1.6rem">✿</span><div><strong>Welcome to the ritual!</strong><br><small>Look out for skin tips and studio news in your inbox.</small></div></div>`;
       }, 1000);
     });
     input.addEventListener('input', () => { row.classList.remove('is-invalid'); msg.textContent = ''; });
@@ -1648,7 +1402,6 @@
   initButtons();
   initReveal();
   initHero();
-  initCountdown();
   initTryOn();
   initQuiz();
   initBA();

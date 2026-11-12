@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Salam Beauty Therapy — Cosmetics, Skincare &amp; Treatments</title>
-  <meta name="description" content="Clean cosmetics and skincare inspired by Middle Eastern botanicals, plus a treatment studio for facials, lashes, brows and makeup. Shop online or book a ritual.">
+  <meta name="description" content="Clean cosmetics and skincare inspired by Middle Eastern botanicals, plus a treatment studio for facials, lashes, brows and makeup. Try on shades, take the skin quiz or book a ritual online.">
   <meta name="theme-color" content="#3B2230">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,9 +35,9 @@
 <!-- Announcement -->
 <div class="announce" id="announce">
   <div class="announce-track">
-    <p class="is-active">Free delivery on orders over <b>₪250</b></p>
-    <p>Winter Glow Week — <b>20% off</b> serums &amp; oils with code GLOW20</p>
-    <p>Book your Signature Rose Facial online in under a minute</p>
+    <p class="is-active">Book your <b>Signature Rose Facial</b> online in under a minute</p>
+    <p>New: try every lip shade on with our <b>virtual try-on</b></p>
+    <p>Take the <b>60-second skin quiz</b> for your personal ritual</p>
   </div>
   <button class="announce-close" aria-label="Dismiss announcement">×</button>
 </div>
@@ -63,10 +63,6 @@
       <button class="icon-btn" id="wishBtn" aria-label="Wishlist">
         <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>
         <span class="badge" id="wishCount">0</span>
-      </button>
-      <button class="icon-btn" id="cartBtn" aria-label="Shopping bag">
-        <svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-        <span class="badge" id="cartCount">0</span>
       </button>
     </div>
   </div>
@@ -126,7 +122,7 @@
         <span class="hc-ico gold"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>
         <div><strong>37 rituals booked today</strong><small>Next slot from 14:15</small></div>
       </div>
-      <button class="hotspot" data-depth=".6" data-qv="rose-serum" aria-label="Quick view Rose Glow Serum">+<span class="hotspot-tip">Rose Glow Serum · ₪149</span></button>
+      <button class="hotspot" data-depth=".6" data-qv="rose-serum" aria-label="Quick view Rose Glow Serum">+<span class="hotspot-tip">Rose Glow Serum · Quick view</span></button>
     </div>
   </div>
   <a href="#try-on" class="scroll-cue" aria-hidden="true" tabindex="-1">Scroll<span></span></a>
@@ -139,24 +135,6 @@
     <span>Cruelty-free</span><i>✦</i><span>Vegan formulas</span><i>✦</i><span>Dermatologist tested</span><i>✦</i><span>Recyclable glass</span><i>✦</i><span>Small-batch</span><i>✦</i><span>Botanical actives</span><i>✦</i>
   </div>
 </div></div>
-
-<!-- Sale -->
-<section class="sale" aria-label="Current offer">
-  <div class="container sale-inner">
-    <div class="reveal">
-      <p class="eyebrow light">Winter Glow Week</p>
-      <h2>20% off all <em>serums &amp; oils</em></h2>
-      <p>Use code <code id="copyCode" title="Click to copy">GLOW20</code> at checkout. While stocks last.</p>
-    </div>
-    <div class="countdown reveal" style="--rd:.15s" id="countdown" aria-label="Offer ends in">
-      <div class="cd-unit"><span class="cd-num"></span><span class="cd-label">Days</span></div>
-      <div class="cd-unit"><span class="cd-num"></span><span class="cd-label">Hours</span></div>
-      <div class="cd-unit"><span class="cd-num"></span><span class="cd-label">Mins</span></div>
-      <div class="cd-unit"><span class="cd-num"></span><span class="cd-label">Secs</span></div>
-    </div>
-    <a class="btn btn-light reveal" style="--rd:.3s" href="#quiz" data-magnetic>Find your ritual</a>
-  </div>
-</section>
 
 <!-- Virtual try-on -->
 <section class="section" id="try-on">
@@ -231,7 +209,7 @@
         <div class="range-row"><input type="range" id="intensity" min="20" max="100" value="85" aria-label="Colour intensity"><output id="intensityOut">85%</output></div>
       </div>
       <div class="tryon-actions reveal">
-        <button class="btn btn-primary" id="tryAdd" data-magnetic>Add shade to bag · <span id="tryPrice">₪89</span></button>
+        <button class="btn btn-primary" id="tryAdd" data-magnetic>Save shade to wishlist</button>
         <button class="btn btn-ghost" id="compareBtn">Hold to compare</button>
       </div>
     </div>
@@ -436,7 +414,7 @@
         <p class="eyebrow reveal">#SalamGlow</p>
         <h2 data-split>Shared by <em>you</em></h2>
       </div>
-      <p class="reveal" style="color:var(--muted);max-width:340px;margin:0">Tag your ritual with #SalamGlow for a chance to be featured — and a little gift from us.</p>
+      <p class="reveal" style="color:var(--muted);max-width:340px;margin:0">Tag your ritual with #SalamGlow for a chance to be featured — we love seeing your rituals.</p>
     </div>
     <div class="gallery-grid" id="galleryGrid"></div>
   </div>
@@ -453,24 +431,24 @@
     </div>
     <div class="faq-list" id="faqList">
       <div class="faq-item reveal is-open">
-        <button class="faq-q" aria-expanded="true">How long does delivery take?<span class="faq-icon"></span></button>
-        <div class="faq-a"><div><p>Orders placed before 14:00 ship the same day. Delivery usually takes 1–3 business days, and it's free on orders over ₪250. You can also choose free pickup from the studio.</p></div></div>
+        <button class="faq-q" aria-expanded="true">How does the virtual try-on work?<span class="faq-icon"></span></button>
+        <div class="faq-a"><div><p>Pick the skin tone closest to yours, then switch between shades, finishes and intensity to preview each lip colour. Save your favourites to your wishlist and try them in person at your next visit.</p></div></div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-q" aria-expanded="false">Are your products suitable for sensitive skin?<span class="faq-icon"></span></button>
         <div class="faq-a"><div><p>Every formula is dermatologist tested and free from parabens, sulphates and synthetic dyes. If you're unsure, take the skin quiz or book a free 10-minute consultation in the studio.</p></div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" aria-expanded="false">Can I return a product I've opened?<span class="faq-icon"></span></button>
-        <div class="faq-a"><div><p>Yes. Our 30-day happy-skin promise covers opened products too. If something doesn't suit you, we'll exchange it or refund you — no questions asked.</p></div></div>
+        <button class="faq-q" aria-expanded="false">How long does a facial take?<span class="faq-icon"></span></button>
+        <div class="faq-a"><div><p>Most facials take 60–75 minutes, including a short skin consultation. Arrive a few minutes early so you can settle in and relax before we begin.</p></div></div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-q" aria-expanded="false">How do I reschedule a treatment?<span class="faq-icon"></span></button>
         <div class="faq-a"><div><p>Use the link in your confirmation message, or call the studio. Changes are free up to 24 hours before your appointment.</p></div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" aria-expanded="false">Do you offer gift cards?<span class="faq-icon"></span></button>
-        <div class="faq-a"><div><p>Digital and printed gift cards are available from ₪100 and can be used for both products and treatments. They're valid for 12 months.</p></div></div>
+        <button class="faq-q" aria-expanded="false">What should I do before my first visit?<span class="faq-icon"></span></button>
+        <div class="faq-a"><div><p>Come with clean skin if you can, and let us know about any allergies or sensitivities when you book. Taking the skin quiz beforehand helps your therapist plan the perfect ritual.</p></div></div>
       </div>
     </div>
   </div>
@@ -481,8 +459,8 @@
   <div class="container">
     <div class="nl-card reveal">
       <div>
-        <h2>Join the ritual, take <em style="color:var(--plum)">10% off</em></h2>
-        <p>New launches, skin tips from our therapists and members-only offers. No spam — just glow.</p>
+        <h2>Join the <em style="color:var(--plum)">ritual</em></h2>
+        <p>New launches, skin tips from our therapists and studio news. No spam — just glow.</p>
       </div>
       <form class="nl-form" id="nlForm" novalidate>
         <div class="nl-row" id="nlRow">
@@ -532,7 +510,7 @@
       <div>
         <h4>Help</h4>
         <ul>
-          <li><a href="#faq" class="link-u">Delivery &amp; returns</a></li>
+          <li><a href="#faq" class="link-u">Treatment questions</a></li>
           <li><a href="#faq" class="link-u">FAQ</a></li>
           <li><a href="#newsletter" class="link-u">Contact us</a></li>
           <li><span style="opacity:.6">Tue – Sun · 10:00 – 19:00</span></li>
@@ -543,7 +521,6 @@
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Salam Beauty Therapy. All rights reserved.</span>
       <nav aria-label="Legal"><a href="#" class="link-u">Privacy</a><a href="#" class="link-u">Terms</a><a href="#" class="link-u">Accessibility</a></nav>
-      <div class="pay" aria-label="Payment methods"><span>VISA</span><span>Mastercard</span><span>Apple Pay</span><span>Bit</span></div>
     </div>
   </div>
 </footer>
@@ -551,13 +528,9 @@
 <!-- Overlays -->
 <div class="overlay" id="overlay"></div>
 
-<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Bag and wishlist" role="dialog">
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Wishlist" role="dialog">
   <div class="drawer-head">
-    <div class="segmented" id="drawerTabs">
-      <span class="seg-indicator"></span>
-      <button data-tab="bag" class="is-active">Bag<sup id="tabBagCount"></sup></button>
-      <button data-tab="wish">Wishlist<sup id="tabWishCount"></sup></button>
-    </div>
+    <h3 class="drawer-title">Your wishlist <sup id="drawerCount"></sup></h3>
     <button class="close-btn" id="drawerClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
   <div class="drawer-body" id="drawerBody"></div>
@@ -591,7 +564,7 @@
 
 <div class="cookie" id="cookie" role="dialog" aria-label="Cookie preferences">
   <strong>A little cookie?</strong>
-  <p>We use cookies to remember your bag and improve your visit. You can change this any time.</p>
+  <p>We use cookies to remember your wishlist and improve your visit. You can change this any time.</p>
   <div><button class="btn btn-primary btn-sm" id="cookieAccept">Accept all</button><button class="btn btn-ghost btn-sm" id="cookieDecline">Essential only</button></div>
 </div>
 
